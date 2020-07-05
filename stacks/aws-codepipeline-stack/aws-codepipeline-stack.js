@@ -44,7 +44,7 @@ class AwsCodepipelinetStack extends cdk.Stack {
               oauthToken: cdk.SecretValue.secretsManager(GITHUB_TOKEN_NAME),
               owner: OWNER,
               repo: REPOSITORY_NAME,
-              trigger: codepipeline_actions.GitHubTrigger.WEBHOOK,
+              trigger: codepipeline_actions.GitHubTrigger.POLL,
               output: sourceOutput
             })
           ]
