@@ -1,0 +1,9 @@
+{
+  "name": "aws-codepipeline-example",
+  "version": "0.1.0",
+  "author": "Song Li",
+  "private": true,
+  "dependencies": {
+    "@aws-cdk/core": "1.49.1"
+  }
+}
