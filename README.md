@@ -1,4 +1,4 @@
-# Welcome to your CDK JavaScript project!
+# Welcome to the example CDK JavaScript project!
 
 This is an example project for JavaScript development with CDK.
 
