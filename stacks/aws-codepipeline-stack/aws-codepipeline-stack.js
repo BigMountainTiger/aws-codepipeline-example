@@ -11,7 +11,9 @@ class AwsCodepipelinetStack extends cdk.Stack {
     super(scope, id, props);
 
     const GITHUB_TOKEN_NAME = 'my-github-token';
+    const OWNER = 'BigMountainTiger';
     const REPOSITORY_NAME = 'aws-codepipeline-example';
+
     const sourceOutput = new codepipeline.Artifact();
     const cdkBuildOutput = new codepipeline.Artifact('CdkBuildOutput');
 
@@ -39,8 +41,8 @@ class AwsCodepipelinetStack extends cdk.Stack {
           actions: [
             new codepipeline_actions.GitHubSourceAction({
               actionName: 'Github_Source',
-              owner: 'BigMountainTiger',
               oauthToken: cdk.SecretValue.secretsManager(GITHUB_TOKEN_NAME),
+              owner: OWNER,
               repo: REPOSITORY_NAME,
               trigger: codepipeline_actions.GitHubTrigger.WEBHOOK,
               output: sourceOutput
