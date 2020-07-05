@@ -21,6 +21,7 @@ class AwsCodepipelineBucketStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       lifecycleRules: [ {expiration: cdk.Duration.days(1)} ]
     });
+    
   }
 }
 
