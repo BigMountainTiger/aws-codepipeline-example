@@ -13,15 +13,6 @@ class AwsCodepipelineBucketStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       lifecycleRules: [ {expiration: cdk.Duration.days(1)} ]
     });
-
-    const bucket_name_test = `huge-head-li-cf-bucket-test`;
-    new s3.Bucket(this, bucket_name_test, {
-      bucketName: bucket_name_test,
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-      lifecycleRules: [ {expiration: cdk.Duration.days(1)} ]
-    });
-    
   }
 }
 
