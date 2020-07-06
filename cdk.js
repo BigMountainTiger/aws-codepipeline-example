@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const cdk = require('@aws-cdk/core');
-const { AwsCodepipelineArtifactBucketStack } = require('./stacks/aws-codepipeline-artifact-bucket-stack/aws-codepipeline-artifact-bucket-stack');
-const { AwsCodepipelinetStack } = require('./stacks/aws-codepipeline-stack/aws-codepipeline-stack');
+const { AwsCodepipelineArtifactBucketStack } = require('./pipeline/aws-codepipeline-artifact-bucket-stack/aws-codepipeline-artifact-bucket-stack');
+const { AwsCodepipelinetStack } = require('./pipeline/aws-codepipeline-stack/aws-codepipeline-stack');
 
 const app = new cdk.App();
 
