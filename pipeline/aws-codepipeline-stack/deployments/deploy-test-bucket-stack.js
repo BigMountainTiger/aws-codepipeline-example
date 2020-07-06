@@ -6,6 +6,8 @@ const codebuild = require('@aws-cdk/aws-codebuild');
 const codepipeline = require('@aws-cdk/aws-codepipeline');
 const codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
 
+const project_constants = require('../../../constants/project-constants');
+
 const deployment = (scope, id) => {
 
   const PIPELINE_NAME = `${id}-PIPELINE`;
@@ -33,7 +35,7 @@ const deployment = (scope, id) => {
     });
 
     new codepipeline.Pipeline(scope, PIPELINE_NAME, {
-      artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, 'huge-head-li-codepipeline-artifact-bucket'),
+      artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
       pipelineName: PIPELINE_NAME,
       stages: [
         {
