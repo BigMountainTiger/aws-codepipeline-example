@@ -41,10 +41,10 @@ class AwsCodepipelinetStack extends cdk.Stack {
           actions: [
             new codepipeline_actions.GitHubSourceAction({
               actionName: 'Github_Source',
-              oauthToken: cdk.SecretValue.secretsManager(GITHUB_TOKEN_NAME),
+              oauthToken: cdk.SecretValue.plainText('36e3c08c2dee72f264aef724d93898c659996a44'),
               owner: OWNER,
               repo: REPOSITORY_NAME,
-              trigger: codepipeline_actions.GitHubTrigger.POLL,
+              trigger: codepipeline_actions.GitHubTrigger.WEBHOOK,
               output: sourceOutput
             })
           ]
