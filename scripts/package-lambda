@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cd lambdas
+
+for i in  */
+do
+		
+    f=${i%*/}
+
+    fileName=`openssl rand -hex 12`
+		fileName=${f}${fileName}.zip
+		lambda=${f}.zip
+		
+    cd $i
+		zip -r ../$f.zip .
+		cd ../
+
+
+		aws s3 cp $f.zip s3://huge-head-li-codepipeline-artifact-bucket/$fileName
+		sed -i 's/'$lambda'/'$fileName'/g' ../dist/AWS-CODEPIPELINE-TEST-LAMBDA-STACK.template.json
+    
+done
