@@ -1,5 +1,7 @@
 // https://developer.aliyun.com/mirror/npm/package/@aws-cdk/aws-codepipeline-actions/v/0.36.1
 
+require('dotenv').config();
+
 const cdk = require('@aws-cdk/core');
 const codebuild = require('@aws-cdk/aws-codebuild');
 const codepipeline = require('@aws-cdk/aws-codepipeline');
@@ -10,7 +12,7 @@ class AwsCodepipelinetStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const GITHUB_TOKEN_NAME = 'my-github-token';
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     const OWNER = 'BigMountainTiger';
     const REPOSITORY_NAME = 'aws-codepipeline-example';
 
@@ -41,7 +43,7 @@ class AwsCodepipelinetStack extends cdk.Stack {
           actions: [
             new codepipeline_actions.GitHubSourceAction({
               actionName: 'Github_Source',
-              oauthToken: cdk.SecretValue.plainText('36e3c08c2dee72f264aef724d93898c659996a44'),
+              oauthToken: cdk.SecretValue.plainText(GITHUB_TOKEN),
               owner: OWNER,
               repo: REPOSITORY_NAME,
               trigger: codepipeline_actions.GitHubTrigger.WEBHOOK,

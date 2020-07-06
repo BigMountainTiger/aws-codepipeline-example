@@ -8,6 +8,7 @@
     "@aws-cdk/aws-codepipeline": "^1.49.1",
     "@aws-cdk/aws-codepipeline-actions": "^1.49.1",
     "@aws-cdk/aws-s3": "^1.49.1",
-    "@aws-cdk/core": "1.49.1"
+    "@aws-cdk/core": "1.49.1",
+    "dotenv": "^8.2.0"
   }
 }
