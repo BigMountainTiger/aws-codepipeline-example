@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const cdk = require('@aws-cdk/core');
+const s3 = require('@aws-cdk/aws-s3');
 const codebuild = require('@aws-cdk/aws-codebuild');
 const codepipeline = require('@aws-cdk/aws-codepipeline');
 const codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
@@ -36,6 +37,7 @@ class AwsCodepipelinetStack extends cdk.Stack {
 
     const PIPELINE_NAME = `${id}-PIPELINE`;
     new codepipeline.Pipeline(this, PIPELINE_NAME, {
+      artifactBucket: s3.Bucket.fromBucketName(this, `${id}-ARTIFACT-BUCKET`, 'huge-head-li-codepipeline-artifact-bucket'),
       pipelineName: PIPELINE_NAME,
       stages: [
         {

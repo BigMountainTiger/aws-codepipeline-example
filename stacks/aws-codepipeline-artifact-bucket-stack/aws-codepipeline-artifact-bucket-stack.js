@@ -1,12 +1,12 @@
 const cdk = require('@aws-cdk/core');
 const s3 = require('@aws-cdk/aws-s3');
 
-class AwsCodepipelineBucketStack extends cdk.Stack {
+class AwsCodepipelineArtifactBucketStack extends cdk.Stack {
 
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const bucket_name = `huge-head-li-cf-bucket`;
+    const bucket_name = `huge-head-li-codepipeline-artifact-bucket`;
     new s3.Bucket(this, bucket_name, {
       bucketName: bucket_name,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -16,4 +16,4 @@ class AwsCodepipelineBucketStack extends cdk.Stack {
   }
 }
 
-module.exports = { AwsCodepipelineBucketStack }
+module.exports = { AwsCodepipelineArtifactBucketStack }
