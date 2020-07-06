@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 
 const cdk = require('@aws-cdk/core');
-const { AwsCodepipelineArtifactBucketStack } = require('./pipeline/aws-codepipeline-artifact-bucket-stack/aws-codepipeline-artifact-bucket-stack');
-const { AwsCodepipelinetStack } = require('./pipeline/aws-codepipeline-stack/aws-codepipeline-stack');
+const addPipelineStacks = require('./pipeline/add-pipeline-stacks');
+
+const { AwsCodepipelineTestBucketStack } = require('./stacks/aws-codepipeline-test-bucket-stack/aws-codepipeline-test-bucket-stack');
 
 const app = new cdk.App();
 
+addPipelineStacks.add(app);
 
-const AWS_CODEPIPELINE_BUCKET_STACK_NAME = 'AWS-CODEPIPELINE-ARTIFACT-BUCKET-STACK';
-new AwsCodepipelineArtifactBucketStack(app, AWS_CODEPIPELINE_BUCKET_STACK_NAME, {
-  description: AWS_CODEPIPELINE_BUCKET_STACK_NAME
-});
-
-const AWS_CODEPIPELINE_STACK_NAME = 'AWS-CODEPIPELINE-STACK';
-new AwsCodepipelinetStack(app, AWS_CODEPIPELINE_STACK_NAME, {
-  description: AWS_CODEPIPELINE_STACK_NAME
+const AWS_CODEPIPELINE_TEST_BUCKET_STACK_NAME = 'AWS-CODEPIPELINE-TEST-BUCKET-STACK';
+new AwsCodepipelineTestBucketStack(app, AWS_CODEPIPELINE_TEST_BUCKET_STACK_NAME, {
+  description: AWS_CODEPIPELINE_TEST_BUCKET_STACK_NAME
 });
