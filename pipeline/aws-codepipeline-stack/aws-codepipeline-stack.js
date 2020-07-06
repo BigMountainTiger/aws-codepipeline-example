@@ -1,84 +1,14 @@
 // https://developer.aliyun.com/mirror/npm/package/@aws-cdk/aws-codepipeline-actions/v/0.36.1
 
-require('dotenv').config();
-
 const cdk = require('@aws-cdk/core');
-const s3 = require('@aws-cdk/aws-s3');
-const codebuild = require('@aws-cdk/aws-codebuild');
-const codepipeline = require('@aws-cdk/aws-codepipeline');
-const codepipeline_actions = require('@aws-cdk/aws-codepipeline-actions');
+const deploy_test_bucket = require('./deployments/deploy-test-bucket-stack');
 
 class AwsCodepipelinetStack extends cdk.Stack {
 
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-    const OWNER = 'BigMountainTiger';
-    const REPOSITORY_NAME = 'aws-codepipeline-example';
-
-    const sourceOutput = new codepipeline.Artifact();
-    const cdkBuildOutput = new codepipeline.Artifact('CdkBuildOutput');
-    const templateFile = 'AWS-CODEPIPELINE-TEST-BUCKET-STACK.template.json';
-
-    const cdkBuild = new codebuild.PipelineProject(this, 'CdkBuild', {
-      buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.2',
-        phases: {
-          install: { commands: ['npm install -g aws-cdk', 'npm install'] },
-          build: { commands: ['cdk synth -o dist', 'ls -l dist'] }
-        },
-        artifacts: {
-          'base-directory': 'dist',
-          files: [templateFile]
-        }
-      }),
-      environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
-    });
-
-    const PIPELINE_NAME = `${id}-PIPELINE`;
-    new codepipeline.Pipeline(this, PIPELINE_NAME, {
-      artifactBucket: s3.Bucket.fromBucketName(this, `${id}-ARTIFACT-BUCKET`, 'huge-head-li-codepipeline-artifact-bucket'),
-      pipelineName: PIPELINE_NAME,
-      stages: [
-        {
-          stageName: 'Source',
-          actions: [
-            new codepipeline_actions.GitHubSourceAction({
-              actionName: 'Github_Source',
-              oauthToken: cdk.SecretValue.plainText(GITHUB_TOKEN),
-              owner: OWNER,
-              repo: REPOSITORY_NAME,
-              trigger: codepipeline_actions.GitHubTrigger.WEBHOOK,
-              output: sourceOutput
-            })
-          ]
-        },
-        {
-          stageName: 'Build',
-          actions: [
-            new codepipeline_actions.CodeBuildAction({
-              actionName: 'CDK_Build',
-              project: cdkBuild,
-              input: sourceOutput,
-              outputs: [cdkBuildOutput]
-            })
-          ]
-        },
-        {
-          stageName: 'Deploy',
-          actions: [
-            new codepipeline_actions.CloudFormationCreateUpdateStackAction({
-              actionName: 'Pipeline_Deploy',
-              templatePath: cdkBuildOutput.atPath(templateFile),
-              stackName: 'AWS-CODEPIPELINE-TEST-BUCKET-STACK',
-              capabilities: ['CAPABILITY_IAM'],
-              adminPermissions: true
-            })
-          ]
-        }
-      ]
-    });
+    deploy_test_bucket(this, id);
   }
 }
 
