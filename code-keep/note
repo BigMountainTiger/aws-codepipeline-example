@@ -1,0 +1,54 @@
+private static Function CreateFunction(Construct scope, Amazon.CDK.AWS.S3.Bucket presortBucket, Amazon.CDK.AWS.DynamoDB.Table dynamoDb)
+        {
+            var LambdaBucketName = Amazon.CDK.AWS.SSM.StringParameter.ValueFromLookup(scope, Config.PARAMETER_STORE_S3_BUCKETNAME_LAMBDA_DEPLOYMENT);
+            var functionName = "FileReducer";
+
+            var key = "FileReducer.zip";
+
+            var s3Bucket1 = Amazon.CDK.AWS.S3.Bucket.FromBucketName(scope, functionName + "_bucket", LambdaBucketName);
+            var func = new Function(scope, functionName + "_function", new FunctionProps()
+            {
+                Code = Code.FromBucket(s3Bucket1, key),
+                Layers= new ILayerVersion[] {
+                        LayerVersion.FromLayerVersionArn(scope, "lambdaSciPy1x", "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python37-SciPy1x:22"),
+                        LayerVersion.FromLayerVersionArn(scope, "Panda", "arn:aws:lambda:us-east-1:"+Config.getAccountID(scope)+":layer:pandas:1")
+                },
+                Handler = "index.lambda_handler",
+                Runtime = Runtime.PYTHON_3_7,
+                FunctionName = Config.SERVICE_NAME + "-file-reducer",
+                Timeout = Duration.Seconds(900),
+                MemorySize = 3000,
+                Environment = new Dictionary<string, string>()
+                {
+                    ["DYNAMO_DB"] = dynamoDb.TableName
+                }
+            });
+
+            presortBucket.GrantReadWrite(func);
+            dynamoDb.GrantReadWriteData(func);
+            dynamoDb.Grant(func, new string[] { "dynamodb:DescribeTable" });
+
+            return func;
+        }
+
+cd Python
+for i in  */
+do
+		
+        f=${i%*/}
+
+        fileName=`openssl rand -hex 12`
+		fileName=${f}${fileName}.zip
+		lambda=${f}.zip
+		
+        cd $i
+		zip -r ../$f.zip .
+		cd ../
+		aws s3 cp $f.zip s3://$bucketname/$fileName
+		sed -i 's/'$lambda'/'$fileName'/g' ../../$servicename.CDK/dist/$stackname.template.json
+        
+		
+done
+
+var lambdaDeploymemtBucket = Amazon.CDK.AWS.S3.Bucket.FromBucketName(scope, "lambdaDeploymemtBucketName", lambdaDeploymemtBucketName);
+lambdaDeploymemtBucket.GrantReadWrite(project);
