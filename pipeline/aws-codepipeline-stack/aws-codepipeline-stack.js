@@ -19,17 +19,18 @@ class AwsCodepipelinetStack extends cdk.Stack {
 
     const sourceOutput = new codepipeline.Artifact();
     const cdkBuildOutput = new codepipeline.Artifact('CdkBuildOutput');
+    const templateFile = 'AWS-CODEPIPELINE-TEST-BUCKET-STACK.template.json';
 
     const cdkBuild = new codebuild.PipelineProject(this, 'CdkBuild', {
       buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
           install: { commands: ['npm install -g aws-cdk', 'npm install'] },
-          build: { commands: ['cdk synth -o dist', 'ls -l'] }
+          build: { commands: ['cdk synth -o dist', 'ls -l dist'] }
         },
         artifacts: {
           'base-directory': 'dist',
-          files: ['*']
+          files: [templateFile]
         }
       }),
       environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
@@ -63,7 +64,19 @@ class AwsCodepipelinetStack extends cdk.Stack {
               outputs: [cdkBuildOutput]
             })
           ]
-        } 
+        },
+        {
+          stageName: 'Deploy',
+          actions: [
+            new codepipeline_actions.CloudFormationCreateUpdateStackAction({
+              actionName: 'Pipeline_Deploy',
+              templatePath: cdkBuildOutput.atPath(templateFile),
+              stackName: 'AWS-CODEPIPELINE-TEST-BUCKET-STACK',
+              capabilities: ['CAPABILITY_IAM'],
+              adminPermissions: true
+            })
+          ]
+        }
       ]
     });
   }
