@@ -11,6 +11,8 @@ const project_constants = require('../../../constants/project-constants');
 
 const deployment = (scope, id) => {
 
+  const account = '537548412289';
+
   const PIPELINE_NAME = `${id}-PIPELINE`;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const OWNER = 'BigMountainTiger';
@@ -29,12 +31,10 @@ const deployment = (scope, id) => {
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
   });
 
-  const policyStatement = new iam.PolicyStatement();
-  policyStatement.addAllResources();
-  policyStatement.addActions(['*']);
-  cdkBuild.addToRolePolicy(policyStatement);
+  const cdk_role = iam.Role.fromRoleArn(scope, `${id}-CDK-ROLE`, `arn:aws:iam::${account}:role/SONG-TEST-ROLE`, { mutable: false });
+  cdkBuild.role = cdk_role;
 
-  new codepipeline.Pipeline(scope, PIPELINE_NAME, {
+  const pipeline = new codepipeline.Pipeline(scope, PIPELINE_NAME, {
     artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
     pipelineName: PIPELINE_NAME,
     stages: [
@@ -63,6 +63,12 @@ const deployment = (scope, id) => {
       }
     ]
   });
+
+  let policyStatement = new iam.PolicyStatement();
+  policyStatement.addResources([`arn:aws:iam::${account}:role/*`]);
+  policyStatement.addActions(["sts:AssumeRole"]);
+
+  pipeline.addToRolePolicy(policyStatement);
 };
 
 module.exports = deployment;
