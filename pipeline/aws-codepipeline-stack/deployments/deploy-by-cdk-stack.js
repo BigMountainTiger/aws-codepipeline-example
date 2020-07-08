@@ -11,8 +11,6 @@ const project_constants = require('../../../constants/project-constants');
 
 const deployment = (scope, id) => {
 
-  const account = '537548412289';
-
   const PIPELINE_NAME = `${id}-PIPELINE`;
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
   const OWNER = 'BigMountainTiger';
@@ -24,7 +22,16 @@ const deployment = (scope, id) => {
     buildSpec: codebuild.BuildSpec.fromObject({
       version: '0.2',
       phases: {
-        install: { commands: ['npm install -g aws-cdk', 'npm install'] },
+        install: { commands: [
+          'npm install -g aws-cdk', 
+          'npm install',
+          'mkdir ~/.aws',
+          'echo "[defult]" >> ~/.aws/credentials',
+          'echo "aws_access_key_id = AKIAX2KDB2WA4BJIX4FH" >> ~/.aws/credentials',
+          'echo "aws_secret_access_key = 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',
+          'echo "region=us-east-1" >> ~/.aws/credentials',
+          'cat ~/.aws/credentials'
+        ] },
         build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never', 'cd ~', 'ls -la'] }
       }
     }),
@@ -36,7 +43,7 @@ const deployment = (scope, id) => {
   policyStatement.addActions(['*']);
   cdkBuild.addToRolePolicy(policyStatement);
 
-  const pipeline = new codepipeline.Pipeline(scope, PIPELINE_NAME, {
+  new codepipeline.Pipeline(scope, PIPELINE_NAME, {
     artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
     pipelineName: PIPELINE_NAME,
     stages: [
