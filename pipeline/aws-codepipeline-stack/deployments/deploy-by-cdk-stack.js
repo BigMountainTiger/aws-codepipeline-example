@@ -26,13 +26,13 @@ const deployment = (scope, id) => {
           'npm install -g aws-cdk', 
           'npm install',
           'mkdir ~/.aws',
-          'echo "[defult]" >> ~/.aws/credentials',
+          'echo "[DProfle]" >> ~/.aws/credentials',
           'echo "aws_access_key_id = AKIAX2KDB2WA4BJIX4FH" >> ~/.aws/credentials',
           'echo "aws_secret_access_key = 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" >> ~/.aws/credentials',
           'echo "region=us-east-1" >> ~/.aws/credentials',
           'cat ~/.aws/credentials'
         ] },
-        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never', 'cd ~', 'ls -la'] }
+        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfle --require-approval never', 'cd ~', 'ls -la'] }
       }
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
