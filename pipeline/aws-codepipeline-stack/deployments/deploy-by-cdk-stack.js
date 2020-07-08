@@ -18,6 +18,9 @@ const deployment = (scope, id) => {
 
   const sourceOutput = new codepipeline.Artifact();
 
+  const access_key = '';
+  const secrete_key = '';
+
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
       version: '0.2',
@@ -26,14 +29,14 @@ const deployment = (scope, id) => {
           'npm install -g aws-cdk', 
           'npm install',
           'mkdir ~/.aws',
-          'echo "[DProfle]" >> ~/.aws/credentials',
-          'echo "aws_access_key_id = AKIAX2KDB2WA4BJIX4FH" >> ~/.aws/credentials',
-          'echo "aws_secret_access_key = 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" >> ~/.aws/credentials',
+          'echo "[DProfile]" >> ~/.aws/credentials',
+          `echo "aws_access_key_id = ${access_key}" >> ~/.aws/credentials`,
+          `echo "aws_secret_access_key = ${secrete_key}" >> ~/.aws/credentials`,
           'echo "region=us-east-1" >> ~/.aws/credentials',
           'cat ~/.aws/credentials'
         ] },
         build: { commands: [
-          'cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfle --require-approval never', 
+          'cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfile --require-approval never', 
           'cd ~', 
           'ls -la'
         ] }
