@@ -25,14 +25,16 @@ const deployment = (scope, id) => {
       version: '0.2',
       phases: {
         install: { commands: ['npm install -g aws-cdk', 'npm install'] },
-        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never'] }
+        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never', 'cd ~', 'ls'] }
       }
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
   });
 
-  const cdk_role = iam.Role.fromRoleArn(scope, `${id}-CDK-ROLE`, `arn:aws:iam::${account}:role/SONG-TEST-ROLE`, { mutable: false });
-  cdkBuild.role = cdk_role;
+  let policyStatement = new iam.PolicyStatement();
+  policyStatement.addAllResources();
+  policyStatement.addActions(['*']);
+  cdkBuild.addToRolePolicy(policyStatement);
 
   const pipeline = new codepipeline.Pipeline(scope, PIPELINE_NAME, {
     artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
@@ -63,12 +65,6 @@ const deployment = (scope, id) => {
       }
     ]
   });
-
-  let policyStatement = new iam.PolicyStatement();
-  policyStatement.addResources([`arn:aws:iam::${account}:role/*`]);
-  policyStatement.addActions(["sts:AssumeRole"]);
-
-  pipeline.addToRolePolicy(policyStatement);
 };
 
 module.exports = deployment;
