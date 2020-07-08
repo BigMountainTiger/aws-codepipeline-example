@@ -25,7 +25,7 @@ const deployment = (scope, id) => {
       version: '0.2',
       phases: {
         install: { commands: ['npm install -g aws-cdk', 'npm install'] },
-        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never', 'cd ~', 'ls'] }
+        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --require-approval never', 'cd ~', 'ls -la'] }
       }
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
