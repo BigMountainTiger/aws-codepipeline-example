@@ -28,7 +28,7 @@ const deployment = (scope, id) => {
           'mkdir ~/.aws',
           'echo "[defult]" >> ~/.aws/credentials',
           'echo "aws_access_key_id = AKIAX2KDB2WA4BJIX4FH" >> ~/.aws/credentials',
-          'echo "aws_secret_access_key = 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',
+          'echo "aws_secret_access_key = S89FFm3drb0v1fFnjs7THOPNGKlZocuyi09qOW/a" >> ~/.aws/credentials',
           'echo "region=us-east-1" >> ~/.aws/credentials',
           'cat ~/.aws/credentials'
         ] },
