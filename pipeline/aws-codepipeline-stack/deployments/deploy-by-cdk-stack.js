@@ -32,7 +32,11 @@ const deployment = (scope, id) => {
           'echo "region=us-east-1" >> ~/.aws/credentials',
           'cat ~/.aws/credentials'
         ] },
-        build: { commands: ['cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfle --require-approval never', 'cd ~', 'ls -la'] }
+        build: { commands: [
+          'cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfle --require-approval never', 
+          'cd ~', 
+          'ls -la'
+        ] }
       }
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
