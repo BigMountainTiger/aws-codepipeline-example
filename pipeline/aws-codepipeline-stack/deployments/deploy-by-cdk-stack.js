@@ -42,6 +42,8 @@ const deployment = (scope, id) => {
   build_commands.push('aws --version');
   build_commands.push('aws s3 ls s3://huge-head-li-codepipeline-artifact-bucket');
   build_commands.push('python --version');
+  build_commands.push('python ./scripts/write-file.py')
+  build_commands.push('cat ~/.aws/credentials')
 
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
