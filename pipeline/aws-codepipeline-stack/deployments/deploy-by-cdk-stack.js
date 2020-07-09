@@ -21,25 +21,31 @@ const deployment = (scope, id) => {
   const access_key = process.env.ACCESS_KEY;
   const secret_key = process.env.SECRET_KEY;
 
+  const install_commands = [];
+  install_commands.push('npm install -g aws-cdk');
+  install_commands.push('npm install');
+  install_commands.push('mkdir ~/.aws');
+  install_commands.push('echo "[DProfile]" >> ~/.aws/credentials');
+  install_commands.push(`echo "aws_access_key_id = ${access_key}" >> ~/.aws/credentials`);
+  install_commands.push(`echo "aws_secret_access_key = ${secret_key}" >> ~/.aws/credentials`);
+  install_commands.push('echo "region=us-east-1" >> ~/.aws/credentials');
+  install_commands.push('cat ~/.aws/credentials');
+  install_commands.length = 0;
+
+  const build_commands = [];
+  build_commands.push('cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfile --require-approval never');
+  build_commands.push('cd ~');
+  build_commands.push('ls -la');
+  build_commands.length = 0;
+
+  build_commands.push('aws --version');
+
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
       version: '0.2',
       phases: {
-        install: { commands: [
-          'npm install -g aws-cdk', 
-          'npm install',
-          'mkdir ~/.aws',
-          'echo "[DProfile]" >> ~/.aws/credentials',
-          `echo "aws_access_key_id = ${access_key}" >> ~/.aws/credentials`,
-          `echo "aws_secret_access_key = ${secret_key}" >> ~/.aws/credentials`,
-          'echo "region=us-east-1" >> ~/.aws/credentials',
-          'cat ~/.aws/credentials'
-        ] },
-        build: { commands: [
-          'cdk deploy AWS-CODEPIPELINE-TEST-BUCKET-STACK --profile DProfile --require-approval never', 
-          'cd ~', 
-          'ls -la'
-        ] }
+        install: { commands: install_commands },
+        build: { commands: build_commands }
       }
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
