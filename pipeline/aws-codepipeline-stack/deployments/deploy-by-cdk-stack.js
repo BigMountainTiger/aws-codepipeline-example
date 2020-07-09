@@ -30,6 +30,7 @@ const deployment = (scope, id) => {
   install_commands.push(`echo "aws_secret_access_key = ${secret_key}" >> ~/.aws/credentials`);
   install_commands.push('echo "region=us-east-1" >> ~/.aws/credentials');
   install_commands.push('cat ~/.aws/credentials');
+  // Clear the statements, so they do not run
   install_commands.length = 0;
 
   const build_commands = [];
@@ -40,6 +41,7 @@ const deployment = (scope, id) => {
 
   build_commands.push('aws --version');
   build_commands.push('aws s3 ls s3://huge-head-li-codepipeline-artifact-bucket');
+  build_commands.push('python --version');
 
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
