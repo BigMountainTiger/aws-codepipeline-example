@@ -39,6 +39,7 @@ const deployment = (scope, id) => {
   build_commands.length = 0;
 
   build_commands.push('aws --version');
+  build_commands.push('aws s3 ls s3://huge-head-li-codepipeline-artifact-bucket');
 
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
