@@ -6,7 +6,7 @@ class AwsCodepipelineTestBucketStack extends cdk.Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    let bucket_name = `huge-head-li-test-bucket`;
+    let bucket_name = `huge-head-li-test-bucket-1`;
     new s3.Bucket(this, bucket_name, {
       bucketName: bucket_name,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
