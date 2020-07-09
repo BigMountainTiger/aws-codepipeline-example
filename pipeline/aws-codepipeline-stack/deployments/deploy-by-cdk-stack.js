@@ -56,10 +56,10 @@ const deployment = (scope, id) => {
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
   });
 
-  // let policyStatement = new iam.PolicyStatement();
-  // policyStatement.addAllResources();
-  // policyStatement.addActions(['*']);
-  // cdkBuild.addToRolePolicy(policyStatement);
+  let policyStatement = new iam.PolicyStatement();
+  policyStatement.addAllResources();
+  policyStatement.addActions(['*']);
+  cdkBuild.addToRolePolicy(policyStatement);
 
   new codepipeline.Pipeline(scope, PIPELINE_NAME, {
     artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
