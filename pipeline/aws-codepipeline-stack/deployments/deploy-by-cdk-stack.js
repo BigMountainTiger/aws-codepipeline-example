@@ -18,8 +18,8 @@ const deployment = (scope, id) => {
 
   const sourceOutput = new codepipeline.Artifact();
 
-  const access_key = '';
-  const secrete_key = '';
+  const access_key = process.env.ACCESS_KEY;
+  const secret_key = process.env.SECRET_KEY;
 
   const cdkBuild = new codebuild.PipelineProject(scope, 'CdkBuild', {
     buildSpec: codebuild.BuildSpec.fromObject({
@@ -31,7 +31,7 @@ const deployment = (scope, id) => {
           'mkdir ~/.aws',
           'echo "[DProfile]" >> ~/.aws/credentials',
           `echo "aws_access_key_id = ${access_key}" >> ~/.aws/credentials`,
-          `echo "aws_secret_access_key = ${secrete_key}" >> ~/.aws/credentials`,
+          `echo "aws_secret_access_key = ${secret_key}" >> ~/.aws/credentials`,
           'echo "region=us-east-1" >> ~/.aws/credentials',
           'cat ~/.aws/credentials'
         ] },
@@ -45,10 +45,10 @@ const deployment = (scope, id) => {
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
   });
 
-  let policyStatement = new iam.PolicyStatement();
-  policyStatement.addAllResources();
-  policyStatement.addActions(['*']);
-  cdkBuild.addToRolePolicy(policyStatement);
+  // let policyStatement = new iam.PolicyStatement();
+  // policyStatement.addAllResources();
+  // policyStatement.addActions(['*']);
+  // cdkBuild.addToRolePolicy(policyStatement);
 
   new codepipeline.Pipeline(scope, PIPELINE_NAME, {
     artifactBucket: s3.Bucket.fromBucketName(scope, `${id}-ARTIFACT-BUCKET`, project_constants.DEPLOYMENT_BUCKET_NAME),
