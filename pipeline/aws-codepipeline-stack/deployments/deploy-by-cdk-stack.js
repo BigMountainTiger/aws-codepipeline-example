@@ -44,7 +44,6 @@ const deployment = (scope, id) => {
     }),
     environment: { buildImage: codebuild.LinuxBuildImage.STANDARD_3_0 }
   });
-  //A
 
   // let policyStatement = new iam.PolicyStatement();
   // policyStatement.addAllResources();
